@@ -20,7 +20,7 @@ interface MapProps {
 
 const Map = ({ searchLocation }: MapProps) => {
   const [center, setCenter] = useState(defaultCenter);
-  const [markers, setMarkers] = useState([
+  const [markers] = useState([
     { lat: 41.0082, lng: 28.9784, color: "red" },
     { lat: 41.0095, lng: 28.9784, color: "green" },
     { lat: 41.0070, lng: 28.9790, color: "yellow" },

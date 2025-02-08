@@ -24,11 +24,13 @@ export const SearchBar = ({ onLocationSelect }: SearchBarProps) => {
 
       autoCompleteRef.current.addListener('place_changed', () => {
         const place = autoCompleteRef.current?.getPlace();
-        if (place?.geometry?.location) {
+        
+        if (place && place.geometry && place.geometry.location) {
           const location = {
             lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng()
           };
+          setSearchValue(place.formatted_address || '');
           onLocationSelect(location);
         }
       });
