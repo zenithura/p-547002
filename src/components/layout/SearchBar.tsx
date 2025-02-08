@@ -1,14 +1,49 @@
 
 import { Search, Mic } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useEffect, useRef, useState } from "react";
 
-export const SearchBar = () => {
+interface SearchBarProps {
+  onLocationSelect: (location: google.maps.LatLngLiteral) => void;
+}
+
+export const SearchBar = ({ onLocationSelect }: SearchBarProps) => {
+  const [searchValue, setSearchValue] = useState("");
+  const autoCompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current && window.google) {
+      autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+        inputRef.current,
+        {
+          types: ['geocode'],
+          componentRestrictions: { country: 'TR' },
+        }
+      );
+
+      autoCompleteRef.current.addListener('place_changed', () => {
+        const place = autoCompleteRef.current?.getPlace();
+        if (place?.geometry?.location) {
+          const location = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          };
+          onLocationSelect(location);
+        }
+      });
+    }
+  }, [onLocationSelect]);
+
   return (
     <div className="fixed bottom-16 left-0 right-0 px-4 py-2 bg-background">
       <div className="relative flex items-center">
         <Search className="absolute left-3 w-5 h-5 text-muted-foreground" />
         <Input
-          type="search"
+          ref={inputRef}
+          type="text"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Search"
           className="pl-10 pr-10 w-full bg-white border border-gray-200 rounded-full shadow-sm"
         />
