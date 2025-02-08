@@ -1,4 +1,5 @@
-import { Home, Map, Bell, User } from "lucide-react";
+
+import { Map, Bell, Home, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const Navigation = () => {
