@@ -51,7 +51,7 @@ const Map = ({ searchLocation }: MapProps) => {
               key={index}
               position={{ lat: marker.lat, lng: marker.lng }}
               icon={{
-                path: google.maps.SymbolPath.CIRCLE,
+                path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
                 fillColor: marker.color,
                 fillOpacity: 1,
                 strokeWeight: 0,
@@ -63,7 +63,7 @@ const Map = ({ searchLocation }: MapProps) => {
             <Marker
               position={searchLocation}
               icon={{
-                path: google.maps.SymbolPath.CIRCLE,
+                path: window.google?.maps?.SymbolPath?.CIRCLE || 0,
                 fillColor: "blue",
                 fillOpacity: 1,
                 strokeWeight: 0,

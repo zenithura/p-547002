@@ -13,7 +13,7 @@ export const SearchBar = ({ onLocationSelect }: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (inputRef.current && window.google) {
+    if (inputRef.current && window.google?.maps?.places) {
       autoCompleteRef.current = new window.google.maps.places.Autocomplete(
         inputRef.current,
         {
