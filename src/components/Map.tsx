@@ -1,47 +1,34 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { useEffect, useState } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Input } from "@/components/ui/input";
 
+const containerStyle = {
+  width: '100%',
+  height: '100%'
+};
+
+const defaultCenter = {
+  lat: 41.0082,
+  lng: 28.9784 // Istanbul coordinates
+};
+
 const Map = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [token, setToken] = useState('');
+  const [apiKey, setApiKey] = useState('');
 
-  useEffect(() => {
-    if (!mapContainer.current || !token) return;
-
-    mapboxgl.accessToken = token;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [41.0082, 28.9784], // Istanbul coordinates
-      zoom: 14
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
-
-    return () => {
-      map.current?.remove();
-    };
-  }, [token]);
-
-  if (!token) {
+  if (!apiKey) {
     return (
       <div className="p-4">
-        <p className="mb-2 text-sm text-muted-foreground">Please enter your Mapbox public token to view the map:</p>
+        <p className="mb-2 text-sm text-muted-foreground">Please enter your Google Maps API key to view the map:</p>
         <Input
           type="text"
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-          placeholder="Enter Mapbox token"
+          value={apiKey}
+          onChange={(e) => setApiKey(e.target.value)}
+          placeholder="Enter Google Maps API key"
           className="mb-2"
         />
         <p className="text-xs text-muted-foreground">
-          You can get your token from <a href="https://mapbox.com/" target="_blank" rel="noopener noreferrer" className="text-primary">mapbox.com</a>
+          You can get your API key from the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary">Google Cloud Console</a>
         </p>
       </div>
     );
@@ -49,7 +36,21 @@ const Map = () => {
 
   return (
     <div className="relative w-full h-[calc(100vh-8rem)]">
-      <div ref={mapContainer} className="absolute inset-0" />
+      <LoadScript googleMapsApiKey={apiKey}>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={defaultCenter}
+          zoom={14}
+          options={{
+            zoomControl: true,
+            streetViewControl: false,
+            mapTypeControl: false,
+            fullscreenControl: false,
+          }}
+        >
+          <Marker position={defaultCenter} />
+        </GoogleMap>
+      </LoadScript>
     </div>
   );
 };
