@@ -10,11 +10,11 @@ const Index = () => {
       <StatusBar />
       
       <main className="pb-16">
-        {/* Search Section */}
-        <SearchBar />
-
         {/* Map Section */}
         <Map />
+
+        {/* Search Section */}
+        <SearchBar />
       </main>
 
       <Navigation />

@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { Input } from "@/components/ui/input";
 
 const containerStyle = {
   width: '100%',
@@ -13,42 +12,55 @@ const defaultCenter = {
   lng: 28.9784 // Istanbul coordinates
 };
 
-const Map = () => {
-  const [apiKey, setApiKey] = useState('');
+const API_KEY = 'AIzaSyBbUmA0kPB_oaD38rf7pEY1FWKW0pHkKgI';
 
-  if (!apiKey) {
-    return (
-      <div className="p-4">
-        <p className="mb-2 text-sm text-muted-foreground">Please enter your Google Maps API key to view the map:</p>
-        <Input
-          type="text"
-          value={apiKey}
-          onChange={(e) => setApiKey(e.target.value)}
-          placeholder="Enter Google Maps API key"
-          className="mb-2"
-        />
-        <p className="text-xs text-muted-foreground">
-          You can get your API key from the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-primary">Google Cloud Console</a>
-        </p>
-      </div>
-    );
-  }
+const Map = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [markers, setMarkers] = useState([
+    { lat: 41.0082, lng: 28.9784, color: "red" },
+    { lat: 41.0095, lng: 28.9784, color: "green" },
+    { lat: 41.0070, lng: 28.9790, color: "yellow" },
+  ]);
 
   return (
     <div className="relative w-full h-[calc(100vh-8rem)]">
-      <LoadScript googleMapsApiKey={apiKey}>
+      <LoadScript googleMapsApiKey={API_KEY}>
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={defaultCenter}
-          zoom={14}
+          zoom={15}
           options={{
             zoomControl: true,
             streetViewControl: false,
             mapTypeControl: false,
             fullscreenControl: false,
+            styles: [
+              {
+                featureType: "all",
+                elementType: "labels.text.fill",
+                stylers: [{ color: "#000000" }]
+              },
+              {
+                featureType: "all",
+                elementType: "geometry",
+                stylers: [{ color: "#f5f5f5" }]
+              }
+            ]
           }}
         >
-          <Marker position={defaultCenter} />
+          {markers.map((marker, index) => (
+            <Marker
+              key={index}
+              position={{ lat: marker.lat, lng: marker.lng }}
+              icon={{
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor: marker.color,
+                fillOpacity: 1,
+                strokeWeight: 0,
+                scale: 8,
+              }}
+            />
+          ))}
         </GoogleMap>
       </LoadScript>
     </div>
